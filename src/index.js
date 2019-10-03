@@ -2,6 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
+// 列の数
+const column_number = 3;
+
 function Square(props) {
   return (
     <button className="square" onClick={props.onClick}>
@@ -14,6 +17,7 @@ class Board extends React.Component {
   renderSquare(i) {
     return (
       <Square
+        key={i}
         value={this.props.squares[i]}
         onClick={() => this.props.onClick(i)}
       />
@@ -21,24 +25,17 @@ class Board extends React.Component {
   }
   
   render() {
+    const divs = [];
+    for (let i = 0; i < column_number; i++) {
+      const squares = [];
+      for (let j = 0; j < column_number; j++) {
+        const square = this.renderSquare(j + (column_number * i));
+        squares.push(square);
+      }
+      divs.push(<div key={i} className="board-row">{squares}</div>);
+    }
     return (
-      <div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
-      </div>
+      divs
     );
   }
 }
@@ -81,7 +78,6 @@ class Game extends React.Component {
   }
   
   getLocation(i) {
-    const column_number = 3;
     let row_number = 1;
     while (i >= (row_number * column_number)) {
       row_number++;
