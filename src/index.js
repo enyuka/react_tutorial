@@ -51,7 +51,9 @@ class Game extends React.Component {
         }
       ],
       stepNumber: 0,
-      xIsNext: true
+      xIsNext: true,
+      // 昇順で履歴を並べるかどうか
+      sortAsc: true,
     };
   }
   
@@ -97,7 +99,7 @@ class Game extends React.Component {
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
     
-    const moves = history.map((step, move) => {
+    let moves = history.map((step, move) => {
       const desc = move ?
         'Go to move #' + move + " " + step.locations[move - 1]:
         'Go to game start';
@@ -107,6 +109,17 @@ class Game extends React.Component {
         </li>
       );
     });
+    
+    if (!this.state.sortAsc) {
+      moves = moves.reverse();
+    }
+  
+    let sort_toggle_button;
+    if (this.state.sortAsc) {
+      sort_toggle_button = <button onClick={() => this.setState({sortAsc: false,})}>desc</button>;
+    } else {
+      sort_toggle_button = <button onClick={() => this.setState({sortAsc: true,})}>asc</button>;
+    }
     
     let status;
     if (winner) {
@@ -125,6 +138,7 @@ class Game extends React.Component {
         </div>
         <div className="game-info">
           <div>{status}</div>
+          <div>{sort_toggle_button}</div>
           <ol>{moves}</ol>
         </div>
       </div>
