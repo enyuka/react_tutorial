@@ -4,6 +4,8 @@ import './index.css';
 
 // 列の数
 const column_number = 3;
+// 行の数
+const row_number = 3;
 
 function Square(props) {
   return (
@@ -130,7 +132,11 @@ class Game extends React.Component {
     if (winner) {
       status = "Winner: " + winner[0];
     } else {
-      status = "Next player: " + (this.state.xIsNext ? "X" : "O");
+      if (history.length - 1 !== column_number * row_number) {
+        status = "Next player: " + (this.state.xIsNext ? "X" : "O");
+      } else {
+        status = "Draw";
+      }
     }
     
     return (
