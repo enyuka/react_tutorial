@@ -7,7 +7,7 @@ const column_number = 3;
 
 function Square(props) {
   return (
-    <button className="square" onClick={props.onClick}>
+    <button className={"square " + (props.win_square ? 'win' : '')} onClick={props.onClick}>
       {props.value}
     </button>
   );
@@ -15,11 +15,16 @@ function Square(props) {
 
 class Board extends React.Component {
   renderSquare(i) {
+    let win_square = false;
+    if (this.props.win_line) {
+      win_square = this.props.win_line.includes(i);
+    }
     return (
       <Square
         key={i}
         value={this.props.squares[i]}
         onClick={() => this.props.onClick(i)}
+        win_square={win_square}
       />
     );
   }
@@ -123,7 +128,7 @@ class Game extends React.Component {
     
     let status;
     if (winner) {
-      status = "Winner: " + winner;
+      status = "Winner: " + winner[0];
     } else {
       status = "Next player: " + (this.state.xIsNext ? "X" : "O");
     }
@@ -134,6 +139,7 @@ class Game extends React.Component {
           <Board
             squares={current.squares}
             onClick={i => this.handleClick(i)}
+            win_line={winner ? winner[1] : null}
           />
         </div>
         <div className="game-info">
@@ -164,7 +170,7 @@ function calculateWinner(squares) {
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
+      return [squares[a], lines[i]];
     }
   }
   return null;
